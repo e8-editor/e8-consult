@@ -12,8 +12,11 @@ import "vertico";
 import "orderless";
 import "consult";
 
-e8.call("vertico-mode");
+e8.call("vertico-mode" as e8.DefinedCommand);
 e8.setVariable("completion-styles", ["orderless", "basic"]);
+// project.el keeps its list of projects in a file beside init.ts, which a
+// fresh machine, such as CI's, has no directory for: keep it in a temporary one.
+e8.setVariable("project-list-file", e8.expandFileName("projects", e8.makeTempFile("consult-projects", { dir: true })));
 
 /** A fresh buffer called "notes" holding `text`, made current. */
 function setup(text: string): void {
@@ -109,7 +112,7 @@ function withFiles(files: Record<string, string>, body: (dir: string) => void): 
 ertDeftest("consult-line-previews-lines-and-goes-to-the-match", () => {
   setup("alpha one\n\nbeta two\ngamma three\nbeta four\n");
   e8.gotoChar(0);
-  const looks = run("consult-line", "<f9> b e t a SPC f o <f9> RET");
+  const looks = run("consult-line" as e8.DefinedCommand, "<f9> b e t a SPC f o <f9> RET");
   // The non-blank lines, numbered.
   shouldEqual(looks[0].after, " \n1 alpha one\n3 beta two\n4 gamma three\n5 beta four\n");
   shouldEqual(looks[1].after, " \n5 beta four\n");
@@ -122,7 +125,7 @@ ertDeftest("consult-line-previews-lines-and-goes-to-the-match", () => {
 ertDeftest("consult-line-quit-leaves-point-where-it-was", () => {
   setup("alpha one\nbeta two\ngamma three\n");
   e8.gotoChar(3);
-  shouldError(() => run("consult-line", "g a m C-g"), { type: "quit" });
+  shouldError(() => run("consult-line" as e8.DefinedCommand, "g a m C-g"), { type: "quit" });
   shouldEqual(e8.minibufferDepth(), 0, "the prompt is closed");
   shouldEqual(e8.point(), 3);
   shouldEqual(e8.bufferName(), "notes");
@@ -134,7 +137,7 @@ ertDeftest("consult-buffer-narrows-previews-and-switches", () => {
   e8.getBufferCreate("bananas");
   e8.setVariable("recentf-mode", true);
   e8.setVariable("recentf-list", ["/tmp/e8-consult-recent.txt"]);
-  const looks = run("consult-buffer", "<f9> b SPC <f9> b a n <f9> RET");
+  const looks = run("consult-buffer" as e8.DefinedCommand, "<f9> b SPC <f9> b a n <f9> RET");
   const shown = looks[0].after;
   should(shown.includes("Buffer") && shown.includes("apples") && shown.includes("bananas"), shown);
   should(shown.includes("File") && shown.includes("/tmp/e8-consult-recent.txt"), shown);
@@ -156,7 +159,7 @@ ertDeftest("consult-ripgrep-searches-as-you-type", () => {
     e8.makeLocalVariable("default-directory");
     e8.setVariable("default-directory", dir);
     waitingFor = "hello world";
-    const looks = run("consult-ripgrep", "h e l l o <f8> <f9> # w o r <f9> RET");
+    const looks = run("consult-ripgrep" as e8.DefinedCommand, "h e l l o <f8> <f9> # w o r <f9> RET");
     const shown = looks[0].after;
     should(shown.includes("a.txt") && shown.includes("2:hello world") && shown.includes("b.txt"), shown);
     // #hello#wor filters the matches.
@@ -168,7 +171,7 @@ ertDeftest("consult-ripgrep-searches-as-you-type", () => {
 
 ertDeftest("consult-goto-line-goes-to-the-line", () => {
   setup("one\ntwo\nthree\nfour\n");
-  run("consult-goto-line", "3 RET");
+  run("consult-goto-line" as e8.DefinedCommand, "3 RET");
   shouldEqual(e8.point(), "one\ntwo\n".length);
 });
 
@@ -176,7 +179,7 @@ ertDeftest("consult-yank-pop-yanks-the-kill-chosen", () => {
   setup("");
   e8.killNew("first kill");
   e8.killNew("second kill");
-  const looks = run("consult-yank-pop", "<f9> f i r RET");
+  const looks = run("consult-yank-pop" as e8.DefinedCommand, "<f9> f i r RET");
   shouldEqual(looks[0].after, " \nsecond kill\nfirst kill\n");
   shouldEqual(e8.bufferText(), "first kill");
 });
@@ -184,7 +187,7 @@ ertDeftest("consult-yank-pop-yanks-the-kill-chosen", () => {
 ertDeftest("consult-outline-goes-to-a-heading-and-digits-narrow-by-level", () => {
   setup("* One\ntext\n** Two\n* Three\n");
   e8.call("org-mode");
-  const looks = run("consult-outline", "<f9> 1 SPC <f9> T h r RET");
+  const looks = run("consult-outline" as e8.DefinedCommand, "<f9> 1 SPC <f9> T h r RET");
   shouldEqual(looks[0].after, " \n1 * One\n3 ** Two\n4 * Three\n");
   shouldEqual(looks[1].after, " \n1 * One\n4 * Three\n");
   shouldEqual(e8.point(), "* One\ntext\n** Two\n".length);
@@ -194,7 +197,7 @@ ertDeftest("consult-flymake-lists-the-diagnostics-and-goes-to-one", () => {
   setup("let a = 1;\nlet b = 2;\nlet c = 3;\n");
   e8.makeOverlay(15, 16, { face: "flymake-error", "flymake-diagnostic": "unused b" });
   e8.makeOverlay(26, 27, { face: "flymake-warning", "flymake-diagnostic": "odd c" });
-  const looks = run("consult-flymake", "<f9> w SPC <f9> RET");
+  const looks = run("consult-flymake" as e8.DefinedCommand, "<f9> w SPC <f9> RET");
   shouldEqual(looks[0].after, " \n   2:4   error   unused b\n   3:4   warning odd c\n");
   shouldEqual(looks[1].after, " \n   3:4   warning odd c\n");
   shouldEqual(e8.point(), 26);
@@ -231,7 +234,7 @@ ertDeftest("consult-register-lists-registers-and-loads-one", () => {
   e8.activateMark();
   e8.executeKbdMacro("C-x r s b");
   e8.gotoChar(0);
-  const looks = run("consult-register", "<f9> t SPC <f9> DEL C-p RET");
+  const looks = run("consult-register" as e8.DefinedCommand, "<f9> t SPC <f9> DEL C-p RET");
   shouldEqual(looks[0].after, " \na notes: second line\nb first\n");
   // t SPC narrows to text.
   shouldEqual(looks[1].after, " \nb first\n");
@@ -241,9 +244,9 @@ ertDeftest("consult-register-lists-registers-and-loads-one", () => {
 ertDeftest("consult-register-store-and-load-take-a-key", () => {
   setup("hello there\n");
   e8.gotoChar(6);
-  run("consult-register-store", "x");
+  run("consult-register-store" as e8.DefinedCommand, "x");
   e8.gotoChar(0);
-  run("consult-register-load", "x");
+  run("consult-register-load" as e8.DefinedCommand, "x");
   shouldEqual(e8.point(), 6);
 });
 
@@ -252,7 +255,7 @@ ertDeftest("consult-line-multi-searches-every-buffer", () => {
   if (e8.getBuffer("other") !== undefined) e8.call("kill-buffer", "other");
   e8.withCurrentBuffer(e8.getBufferCreate("other"), () => e8.insert("apple elsewhere\npear\n"));
   // C-u: every buffer, not only the project's.
-  const looks = run("consult-line-multi", "a p p <f9> SPC e l s RET", "C-u ");
+  const looks = run("consult-line-multi" as e8.DefinedCommand, "a p p <f9> SPC e l s RET", "C-u ");
   const shown = looks[0].after;
   should(shown.includes("notes") && shown.includes("apple in notes") && shown.includes("other") && shown.includes("apple elsewhere") && !shown.includes("pear"), shown);
   shouldEqual(e8.bufferName(), "other");

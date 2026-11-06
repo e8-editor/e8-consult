@@ -38,6 +38,10 @@ jobs:
           tar xzf ./*.tar.gz
           echo "$RUNNER_TEMP/$(basename ./*.tar.gz .tar.gz)" >> "$GITHUB_PATH"
 
+      # For consult-ripgrep's test, which skips without rg.
+      - name: Install ripgrep
+        run: sudo apt-get install -y --no-install-recommends ripgrep
+
       - name: Test
         run: make test
 
