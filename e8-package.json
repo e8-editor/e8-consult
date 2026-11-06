@@ -1,0 +1,6 @@
+{
+  "name": "consult",
+  "description": "Commands that read with completion and preview the candidate, narrowing by kind, after consult.el",
+  "e8": "0.3.1",
+  "requires": {}
+}
