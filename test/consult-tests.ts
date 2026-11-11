@@ -12,6 +12,9 @@ import "vertico";
 import "orderless";
 import "consult";
 
+/** A window as the E8 running gives one: an object, or in E8 0.5.8 and before a number. */
+type Win = ReturnType<typeof e8.selectedWindow>;
+
 e8.call("vertico-mode" as e8.DefinedCommand);
 e8.setVariable("completion-styles", ["orderless", "basic"]);
 // project.el keeps its list of projects in a file beside init.ts, which a
@@ -58,7 +61,7 @@ interface Look {
 }
 
 let looks: Look[] = [];
-let window = 0;
+let window: Win = e8.selectedWindow();
 /** What <f8> waits for vertico to show. */
 let waitingFor = "";
 

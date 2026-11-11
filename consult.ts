@@ -26,6 +26,9 @@ import { current as projectCurrent } from "project";
 import { registerAlist, type RegisterValue } from "register";
 import { truthy } from "subr";
 
+/** A window as the E8 running gives one: an object, or in E8 0.5.8 and before a number. */
+type Win = ReturnType<typeof e8.selectedWindow>;
+
 e8.defineVariable({ name: "consult-narrow-key", doc: 'The prefix key for narrowing, such as "<": "< b" narrows consult-buffer to buffers. Typing a narrowing key and SPC on empty input narrows too.', value: null });
 e8.defineVariable({ name: "consult-widen-key", doc: "The key that widens again; by default the narrow key twice.", value: null });
 e8.defineVariable({ name: "consult-preview-key", doc: 'When to preview: "any" key, keys such as ["S-<down>", "S-<up>"], or nil never; with [":debounce", seconds, ...] to wait first.', value: "any" });
@@ -135,7 +138,7 @@ export interface ReadOptions {
 }
 
 /** The window previews show in: the one selected when the prompt opened, as minibuffer-selected-window. */
-let previewWindow = 0;
+let previewWindow: Win = e8.selectedWindow();
 
 /** The narrowing of the open consult prompt, by minibuffer depth. */
 const narrowing = new Map<number, { options: ReadOptions; key?: string; prompt: string; overlay?: number }>();
