@@ -28,6 +28,8 @@ import { truthy } from "subr";
 
 /** A window as the E8 running gives one: an object, or in E8 0.5.8 and before a number. */
 type Win = ReturnType<typeof e8.selectedWindow>;
+/** A process as the E8 running gives one: an object, or in E8 0.5.8 and before its name. */
+type Proc = ReturnType<typeof e8.makeProcess>;
 
 e8.defineVariable({ name: "consult-narrow-key", doc: 'The prefix key for narrowing, such as "<": "< b" narrows consult-buffer to buffers. Typing a narrowing key and SPC on empty input narrows too.', value: null });
 e8.defineVariable({ name: "consult-widen-key", doc: "The key that widens again; by default the narrow key twice.", value: null });
@@ -1059,7 +1061,7 @@ function asyncTable(build: (search: string) => string[] | undefined, parse: (lin
   stop: () => void;
 } {
   let searching: string | undefined;
-  let proc: string | undefined;
+  let proc: Proc | undefined;
   let lines: string[] = [];
   let partial = "";
   const stop = () => {
