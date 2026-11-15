@@ -1,6 +1,13 @@
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/e8-editor/e8/main/docs/assets/banner-ports-dark.png">
+  <img alt="E8 package ports" src="https://raw.githubusercontent.com/e8-editor/e8/main/docs/assets/banner-ports-light.png">
+</picture>
+
+Part of the [E8 package ports](https://github.com/e8-editor/e8#packages): Emacs packages ported to [E8](https://github.com/e8-editor/e8) and maintained with it. This is a port of [consult](https://github.com/minad/consult) 2.8 by Daniel Mendler and the Consult contributors. The design and the original code are theirs; the port keeps upstream's licence, the GNU General Public License version 3 or later.
+
 # e8-consult
 
-Commands for [E8](https://github.com/e8-editor/e8) that pick something with completion and show you where it leads while you choose: the window follows the selection, so moving through the candidates previews each line, buffer, match or heading, and keys narrow the list to one kind of candidate. A port of [consult](https://github.com/minad/consult) 2.8.
+Commands for [E8](https://github.com/e8-editor/e8) that pick something with completion and show you where it leads while you choose: the window follows the selection, so moving through the candidates previews each line, buffer, match or heading, and keys narrow the list to one kind of candidate.
 
 ## Installing
 
@@ -80,7 +87,7 @@ Variables: `consult-preview-key` (`"any"`, a list of keys, or nil for no preview
 
 ## Credit
 
-This is a port to E8 of [consult](https://github.com/minad/consult) 2.8, with its `consult-imenu.el`, `consult-compile.el`, `consult-xref.el`, `consult-register.el` and `consult-flymake.el`, by Daniel Mendler and the Consult contributors, copyright the Free Software Foundation, and distributed in GNU ELPA, under the GNU General Public License version 3 or later. It is not the upstream authors' work as published, and they do not endorse it: report problems with the port here, not upstream.
+consult 2.8, with its `consult-imenu.el`, `consult-compile.el`, `consult-xref.el`, `consult-register.el` and `consult-flymake.el`, all ported here, is copyright the Free Software Foundation and distributed in GNU ELPA, under the GNU General Public License version 3 or later. This port is not the upstream authors' work as published, and they do not endorse it: report problems with the port here, not upstream.
 
 ## Developing
 
