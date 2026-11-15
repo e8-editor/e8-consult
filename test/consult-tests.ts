@@ -6,7 +6,7 @@
 //
 // Copyright (C) 2026 The E8 contributors
 
-import { ertDeftest, should, shouldEqual, shouldError } from "ert";
+import { ertDeftest, should, shouldEqual } from "ert";
 import { executableFind } from "subr";
 import "vertico";
 import "orderless";
@@ -128,7 +128,8 @@ ertDeftest("consult-line-previews-lines-and-goes-to-the-match", () => {
 ertDeftest("consult-line-quit-leaves-point-where-it-was", () => {
   setup("alpha one\nbeta two\ngamma three\n");
   e8.gotoChar(3);
-  shouldError(() => run("consult-line" as e8.DefinedCommand, "g a m C-g"), { type: "quit" });
+  // C-g leaves the minibuffer and the macro goes on, as in Emacs.
+  run("consult-line" as e8.DefinedCommand, "g a m C-g");
   shouldEqual(e8.minibufferDepth(), 0, "the prompt is closed");
   shouldEqual(e8.point(), 3);
   shouldEqual(e8.bufferName(), "notes");
