@@ -938,6 +938,10 @@ function yankState(replace: boolean): State {
 }
 
 function readKill(prompt: string, replace: boolean): string | undefined {
+  // Text another program put on the clipboard joins the kill ring first, as
+  // consult--yank-read's (current-kill 0) takes it in (minad/consult#443);
+  // with neither a kill nor the clipboard, it says the kill ring is empty.
+  e8.currentKill(0);
   const cands = killRingCandidates();
   if (cands.length === 0) e8.userError("Kill ring is empty");
   const r = consultRead({ command: "consult-yank-pop", prompt, candidates: cands.map((c) => c.replace(/\n/g, "↲")), sort: false, requireMatch: true, category: "kill-ring", state: undefined });
