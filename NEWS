@@ -1,0 +1,72 @@
+consult NEWS -- history of user-visible changes.
+
+This is the news of e8-consult, the E8 port of consult.  'C-h P'
+shows it under the package's description.
+
+
+* Changes in consult 0.1.1
+
+** 'consult-yank-from-kill-ring' offers what another program copied.
+So does 'consult-yank-pop'.  Text put on the clipboard joins the kill
+ring first, as consult.el's (current-kill 0) takes it in, where before
+they said "Kill ring is empty".
+
+
+* Changes in consult 0.1.0
+
+This is the first release, a port of consult 2.8.  It needs E8 0.3.1
+or newer.
+
+** The window previews each candidate as the selection moves.
+'consult-preview-key' says when: "any" key, a list of keys, or nil for
+no preview, with ":debounce" to wait first.
+
+** Narrowing keys limit a prompt to one kind of candidate.
+A narrowing key and 'SPC' on empty input narrows, and 'DEL' on empty
+input widens again.  'consult-narrow-key' narrows anywhere in the input.
+
+** 'consult-line' goes to a line that matches.
+'consult-line-multi' searches the project's buffers, or every buffer
+with 'C-u'.
+
+** 'consult-buffer' chooses among buffers, recent files and bookmarks.
+'b', 'f', 'm' or 'p' and 'SPC' narrow to one kind.  Its kin are
+'consult-buffer-other-window', 'consult-buffer-other-frame' and
+'consult-project-buffer'; 'consult-recent-file' and 'consult-bookmark'
+choose one kind alone.
+
+** 'consult-ripgrep' and 'consult-grep' search files as you type.
+'consult-find' finds file names the same way.  Input such as
+"#hello#wor" searches for hello and filters the matches by wor.
+
+** 'consult-goto-line' shows the line as its number is typed.
+
+** 'consult-outline' and 'consult-imenu' go to a heading or definition.
+A digit and 'SPC' narrow 'consult-outline' to headings at that level or
+above.  'consult-imenu-multi' looks through the project's buffers.
+
+** 'consult-mark' and 'consult-global-mark' choose from the mark ring.
+
+** 'consult-flymake' and 'consult-compile-error' go to an error.
+'e', 'w' or 'n' and 'SPC' narrow 'consult-flymake' to errors, warnings
+or notes.
+
+** 'consult-yank-pop' and 'consult-yank-from-kill-ring' choose a kill.
+
+** History commands insert an earlier input chosen with completion.
+They are 'consult-history', 'consult-isearch-history',
+'consult-complex-command' and 'consult-mode-command'.
+
+** The register commands list each register with what it holds.
+They are 'consult-register', 'consult-register-load' and
+'consult-register-store'.
+
+** 'consult-theme' tries each theme on as the selection moves.
+
+** 'consult-xref' chooses among several xrefs with preview.
+Set 'xref-show-xrefs-function' and 'xref-show-definitions-function' to
+it to use it.
+
+** Other packages can read with consult's preview and narrowing.
+The module 'consult' exports 'consultRead', 'consultMulti',
+'consultSources' and 'consultCustomize'.
